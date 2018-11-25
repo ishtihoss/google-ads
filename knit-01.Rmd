@@ -1,0 +1,51 @@
+---
+title: "Google Ads Performance Report between August 25th to November 22nd, 2018"
+author: "Ishtiaque Hossain"
+date: "November 22, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r Loading Packages, echo=FALSE,include=FALSE}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+```
+
+##Summary
+
+```{r Keyword Performance Summary, echo=FALSE}
+aug25toNov22 <- read_excel("C:/Users/ishtiaque/Documents/google_ads/google-knit-rr01/aug25toNov22.xlsx")
+aug25toNov22 %>% group_by(ad_group) %>% summarise(sClicks=sum(clicks),sImpr=sum(impr),sCTR=sClicks/sImpr,sCost=sum(cost),sConv=sum(conversions)) %>% arrange(desc(sCost,sClicks))
+```
+
+##Impressions vs Clicks for Ad Groups
+
+```{r fig1, echo=FALSE}
+l3m <- aug25toNov22 %>% group_by(ad_group) %>% summarise(Sclicks=sum(clicks),Simpr=sum(impr),Sctr=Sclicks/Simpr,Scost=sum(cost))
+l3m %>% ggplot(aes(Simpr,Sclicks,color=Scost,label=ad_group)) + geom_point()+geom_label_repel()
+```
+
+## Simulation for December 2018 
+
+```{r simulation,echo=FALSE}
+sim <- aug25toNov22 %>% filter(clicks>0 & kw_status=='Enabled')
+KEYWORDS <- sample(sim$keyword,250,replace = TRUE,prob = sim$clicks)
+dataframe_sim <- data.frame(prop.table(table(KEYWORDS)))
+dataframe_sim %>% arrange(desc(Freq))
+```
+
+## Improve Ad Score of Following Keywords
+
+```{r low-score-keywords,echo=FALSE,results='hold'}
+aug25toNov22 %>% filter(status=='Rarely shown (low Quality Score)') %>% select(keyword,status,impr,clicks) %>% arrange(desc(impr))
+```
+
+
+
+
+
+
