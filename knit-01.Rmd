@@ -48,18 +48,18 @@ aug25toNov22 %>% filter(status=='Rarely shown (low Quality Score)') %>% select(k
 ## Grouping Audience by Age
 
 ```{r audience by age, echo=FALSE}
-aug25toNov22_demographic %>% group_by(age) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost))
+aug25toNov22_demographic %>% group_by(age) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost)) %>% arrange(desc(sClicks))
 ```
 ## Grouping Audience by Gender
 
 ```{r audience by gender, echo=FALSE}
-aug25toNov22_demographic %>% group_by(gender) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost))
+aug25toNov22_demographic %>% group_by(gender) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost)) %>% arrange(desc(sClicks))
 ```
 
 ## Grouping Audience by Income Group
 
 ```{r, audience by household income, echo=FALSE}
-aug25toNov22_demographic %>% group_by(household_income) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost))
+aug25toNov22_demographic %>% group_by(household_income) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost)) %>%arrange(desc(sClicks))
 ```
 
 
