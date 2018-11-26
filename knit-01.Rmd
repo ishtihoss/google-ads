@@ -13,12 +13,13 @@ library(readxl)
 library(dplyr)
 library(ggplot2)
 library(ggrepel)
+aug25toNov22_demographic <- read_excel("C:/Users/ishtiaque/Downloads/aug25toNov22_demographic.xlsx")
+aug25toNov22 <- read_excel("C:/Users/ishtiaque/Documents/google_ads/google-knit-rr01/aug25toNov22.xlsx")
 ```
 
 ##Summary
 
 ```{r Keyword Performance Summary, echo=FALSE}
-aug25toNov22 <- read_excel("C:/Users/ishtiaque/Documents/google_ads/google-knit-rr01/aug25toNov22.xlsx")
 aug25toNov22 %>% group_by(ad_group) %>% summarise(sClicks=sum(clicks),sImpr=sum(impr),sCTR=sClicks/sImpr,sCost=sum(cost),sConv=sum(conversions)) %>% arrange(desc(sCost,sClicks))
 ```
 
@@ -40,10 +41,26 @@ dataframe_sim %>% arrange(desc(Freq))
 
 ## Improve Ad Score of Following Keywords
 
-```{r low-score-keywords,echo=FALSE,results='hold'}
+```{r low-score-keywords,echo=FALSE}
 aug25toNov22 %>% filter(status=='Rarely shown (low Quality Score)') %>% select(keyword,status,impr,clicks) %>% arrange(desc(impr))
 ```
 
+## Grouping Audience by Age
+
+```{r audience by age, echo=FALSE}
+aug25toNov22_demographic %>% group_by(age) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost))
+```
+## Grouping Audience by Gender
+
+```{r audience by gender, echo=FALSE}
+aug25toNov22_demographic %>% group_by(gender) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost))
+```
+
+## Grouping Audience by Income Group
+
+```{r, audience by household income, echo=FALSE}
+aug25toNov22_demographic %>% group_by(household_income) %>% summarise(sImpr=sum(impr),sClicks=sum(clicks),sConv=sum(conversions),sCost=sum(cost))
+```
 
 
 
