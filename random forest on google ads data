@@ -1,0 +1,19 @@
+# Cleaning Data
+
+kwd_data <- kwd_data %>% filter(!Keyword=="Content")
+names(kwd_data) <- str_replace_all(names(kwd_data),'/',"_")
+
+# Creating Test and Train Set
+
+train_index <- createDataPartition(Allconv.,times=1,p=.8,list = F)
+train_set <- kwd_data %>% slice(train_index)
+test_set <- kwd_data %>% slice(-train_index)
+
+# Creating Model for Prediction
+
+fit <- train(Allconv.~Clicks+Pages_session+SearchImpr.share+`Avg.sessionduration(seconds)`+Position,method="rf",data=train_set)
+p_hat <- predict(fit,test_set)
+
+# View results
+
+test_set %>% mutate(pred=p_hat)
