@@ -1,4 +1,4 @@
-# Keyword Performance 
+# Keyword Performance (fetching data from Google Ads API)
 
 body_kwd <- statement(select = c("Criteria","CampaignName","AdGroupName","KeywordMatchType","CreativeQualityScore","Impressions","SearchImpressionShare","SearchExactMatchImpressionShare","AveragePageviews","AveragePosition","AverageTimeOnSite","BounceRate","Clicks","Ctr","Cost","AllConversions"),
                       report = "KEYWORDS_PERFORMANCE_REPORT",
