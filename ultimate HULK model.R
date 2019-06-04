@@ -52,7 +52,7 @@ confusionvector <- sapply(j, function(j){
 #Majority Voting Method
 
 df <- data.frame(matrix(unlist(fits_predicts), nrow=6, byrow=T))
-colnames(df) <- seq(1:95)
+colnames(df) <- seq(1:nrow(fits_predicts))
 rownames(df) <- models
 
 col_index <- seq(1,ncol(df), 1)
