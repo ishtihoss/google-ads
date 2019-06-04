@@ -56,7 +56,7 @@ sense8 <- data.frame(sensitivity) %>% mutate(model=c("lda",  "naive_bayes",
 #Majority Voting Method
 
 df <- data.frame(matrix(unlist(fits_predicts), nrow=8, byrow=T))
-colnames(df) <- seq(1:53)
+colnames(df) <- seq(1:nrow(fits_predicts))
 rownames(df) <- models
 
 col_index <- seq(1,ncol(df), 1)
