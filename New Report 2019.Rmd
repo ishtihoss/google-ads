@@ -1,0 +1,68 @@
+---
+title: "New Dashboards"
+author: "Ishtiaque Hossain"
+date: "6/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r Loading Packages, echo=FALSE,include=FALSE}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(RAdwords)
+library(stringr)
+
+
+body_kwd <- statement(select = c("Criteria","CampaignName","AdGroupName","KeywordMatchType","CreativeQualityScore","Impressions","SearchImpressionShare","SearchExactMatchImpressionShare","Clicks","AveragePageviews","AveragePosition","AverageTimeOnSite","Ctr","Cost","AllConversions","BounceRate","FinalUrls"),
+                      report = "KEYWORDS_PERFORMANCE_REPORT",
+                      start = "2017-12-12",
+                      end = "2019-06-15")
+
+kwd_data <- getData(clientCustomerId = '931-388-0493',
+                    google_auth = doAuth(),
+                    statement = body_kwd,
+                    transformation= T,
+                    changeNames = T)
+kwd_data <- kwd_data %>% filter(!Keyword=="Content")
+names(kwd_data) <- str_replace_all(names(kwd_data),'/',"_")
+
+body_adperformance <- statement(select=c("CampaignName","AdGroupName","HeadlinePart1","HeadlinePart2","AdType","Automated","Impressions","Clicks","Ctr","AllConversions","AveragePageviews","BounceRate","Cost","CallToActionText","Month","AdStrengthInfo","CreativeFinalUrls","MultiAssetResponsiveDisplayAdHeadlines","PercentNewVisitors","AveragePosition","AverageTimeOnSite"),
+                                report = "AD_PERFORMANCE_REPORT",
+                                start = "2018-01-22",end = "2019-06-12")
+adperformance_data <- getData(clientCustomerId = '931-388-0493',google_auth = doAuth(),
+                              statement=body_adperformance,
+                              transformation = T,
+                              changeNames = T)
+
+juris_malaysia <- kwd_data %>% filter(Campaign=="Juris Global Solutions")
+
+```
+
+
+## Improve Content Related to these Keywords (People are spending less time than expected)
+
+```{r bad content,echo=FALSE}
+juris_malaysia %>% filter(Clicks>mean(Clicks)) %>% group_by(Keyword) %>% summarise(Average_Session_Duration_by_Seconds=sum(`Avg.sessionduration(seconds)`),Total_Clicks=sum(Clicks),Total_Cost=sum(Cost)) %>% filter(Average_Session_Duration_by_Seconds<mean(Average_Session_Duration_by_Seconds)) %>% arrange(Average_Session_Duration_by_Seconds)
+```
+
+
+## Keywords with worst Bounce Rates 
+
+```{r Bounce Rate, echo=FALSE}
+juris_malaysia %>% filter(Clicks>mean(Clicks) & !Keyword=='Content') %>% group_by(Keyword) %>% arrange(desc(Bouncerate)) %>% select(Keyword,Bouncerate,Clicks,Cost)
+
+```
+
+# Ad Headlines with most Conversions
+
+```{r best performing headlines,echo=FALSE}
+adperformance_data %>% group_by(Headline1,Headline2) %>% summarise(sConversions=sum(Allconv.),sClicks=sum(Clicks),sCost=sum(Cost)) %>% arrange(desc(sConversions))
+
+```
+
