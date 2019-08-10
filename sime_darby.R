@@ -28,9 +28,9 @@ library(readr)
 
 # Prepping Data
 
-data_dir <- gs_data_dir_local("gs://birds-nest-bucket")
-jgs <- read_csv(file.path(data_dir, "keyword.csv"))
-jgs <- jgs[,-1]
+data_dir <- gs_data_dir_local("gs://birds-nest-bb")
+jgs <- read_csv(file.path(data_dir, "sime_darby_selangorku.csv"))
+
 
 # Creating Test and Train Data
 
@@ -47,7 +47,7 @@ set.seed(1)
 
 fits <- lapply(models, function(model){ 
   print(model)
-  train(Conv_stat~Clicks+Impressions+Pages_session+Avg.sessionduration_seconds_+Bouncerate+Position+SearchImpr.share, method = model, data = train_part)
+  train(Conv_stat~Clicks+Impressions+Pages_session+Avg.sessionduration_seconds_+Bouncerate+Avg..position+SearchImpr.share, method = model, data = train_part)
 }) 
 
 names(fits) <- models
